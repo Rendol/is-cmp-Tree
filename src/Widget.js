@@ -11,6 +11,9 @@ IS.reg('widget.Tree', function () {
 		clsElement: 'widget.Tree.Element',
 		clsListBlock: 'widget.Tree.List',
 
+		primaryKey: 'id',
+		parentKey: 'parent_id',
+
 		list: {},
 		collection: {},
 
@@ -41,11 +44,57 @@ IS.reg('widget.Tree', function () {
 			}
 		}),
 
-		_events: MK.extend(__ext__._events, {}),
+		_events: MK.extend(__ext__._events, {
+			'element-create': function (me) {
+				me.on('element-create', function (rec) {
+					me.create(rec);
+					rec.$bound('name').focus();
+				})
+			}
+		}),
 
-		load: function (parentId, data) {
-			this.collection[parentId].load(data);
+		load: function (data) {
+			this._update(data, 'load');
+		},
+		create: function (data) {
+			this._update(data, 'create');
+		},
+		update: function (data) {
+			this._update(data, 'update');
+		},
+
+		_update: function (data, action) {
+			var me = this;
+			if (!(data instanceof Array)) {
+				data = [data];
+			}
+			$.each(data, function () {
+				var dataItem = this;
+				var list = me.collection[dataItem[me.parentKey]];
+				if (list) {
+					var exists = list.filter(function (item) {
+						return item.id == dataItem.id;
+					});
+					if (exists.length) {
+						exists[0].set(dataItem);
+					}
+					else {
+						var method = 'push';
+						if (list.modeReverseLoad && action == 'load') {
+							method = 'unshift';
+						}
+						var record = dataItem;
+						if (!(record instanceof MK.Object)) {
+							record = new list.Model(dataItem);
+						}
+						record.parent = list;
+						list[method](record);
+					}
+				}
+			});
+			me.trigger(action, data);
 		}
+
 	});
 })
 ;

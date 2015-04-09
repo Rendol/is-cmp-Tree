@@ -9,14 +9,16 @@ IS.reg('widget.Tree.Element', function () {
 	var __ext__ = IS.get('components.Object');
 	return MK.extend({}, __ext__, {
 
-		primaryKey: 'id',
-		parentKey: 'parent_id',
-
 		children: {},
 
 		init: function () {
 			var me = this,
-				id = me[me.primaryKey];
+				id = me[me.widget.primaryKey];
+
+			if (!id) {
+				id = '-new-' + MK.randomString();
+				me.set(me.widget.primaryKey, id);
+			}
 
 			me.widget.collection[id] = new me.parent.widget.clsList({
 				parent: me,

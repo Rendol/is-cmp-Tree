@@ -63,49 +63,68 @@
 			}
 		});
 
-		tree.load(0, [
+		tree.list.on('change:length', function (evt) {
+			if (evt.value == 0) {
+				var first = new tree.list.Model({
+					parent_id: 0,
+					name: 'First'
+				});
+				tree.create(first);
+				first.$bound('name').focus();
+			}
+		});
+
+		tree.load([
 			{
+				parent_id: 0,
 				id: 1,
 				name: 'John',
 				pos: 0
 			},
 			{
+				parent_id: 0,
 				id: 2,
 				name: 'Artur',
 				pos: 1
 			},
 			{
+				parent_id: 0,
 				id: 3,
 				name: 'Fedor',
 				pos: 2
 			}
 		]);
 
-		tree.load(2, [
+		tree.load([
 			{
+				parent_id: 2,
 				id: 4,
 				name: 'Alexandra',
 				pos: 0
 			},
 			{
+				parent_id: 2,
 				id: 5,
 				name: 'Alena',
 				pos: 1
 			},
 			{
+				parent_id: 2,
 				id: 6,
 				name: 'Marya',
 				pos: 2
 			}
 		]);
 
-		tree.load(4, [
+		tree.load([
 			{
+				parent_id: 4,
 				id: 7,
 				name: 'Semen',
 				pos: 0
 			},
 			{
+				parent_id: 4,
 				id: 8,
 				name: 'Danya',
 				pos: 1
