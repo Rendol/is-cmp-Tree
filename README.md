@@ -1,2 +1,2 @@
-# is-cmp-Tree
-Infinity Systems component Tree
+# is-widget-Tree
+Infinity Systems widget Tree
