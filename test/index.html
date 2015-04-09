@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>InfinitySystems widget Tree</title>
+	<script type="application/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+	<script type="application/javascript" src="../bower_components/matreshka/matreshka.js"></script>
+	<script type="application/javascript" src="../bower_components/InfinitySystems/src/InfinitySystems.js"></script>
+
+	<script type="application/javascript" src="../bower_components/InfinitySystems/src/components/Base.js"></script>
+	<script type="application/javascript" src="../bower_components/InfinitySystems/src/components/Object.js"></script>
+	<script type="application/javascript" src="../bower_components/InfinitySystems/src/components/Array.js"></script>
+
+	<script type="application/javascript" src="../src/Element.js"></script>
+	<script type="application/javascript" src="../src/List.js"></script>
+	<script type="application/javascript" src="../src/Widget.js"></script>
+</head>
+<body onload="run()">
+
+<div>
+
+	<h1>Hello world!</h1>
+
+
+	<div id="my-tree">
+		<h2>It's my tree widget</h2>
+		<ol class="js-list">
+			<!--
+			Loading...
+			-->
+		</ol>
+	</div>
+
+</div>
+
+<script type="text/html" id="widget-tree-element">
+	<li class="js-list">
+		<span class="js-name">Anonymous</span>
+		<ol class="js-list">
+			<!--
+			Loading...
+			-->
+		</ol>
+	</li>
+</script>
+
+<script type="application/javascript">
+	function run() {
+		console.log('Start');
+
+		var tree = IS.crt('widget.Tree', {
+			target: '#my-tree',
+			list: {
+				itemRenderer: '#widget-tree-element'
+			}
+		});
+
+		tree.load(0, [
+			{
+				id: 1,
+				name: 'John'
+			},
+			{
+				id: 2,
+				name: 'Artur'
+			},
+			{
+				id: 3,
+				name: 'Fedor'
+			}
+		]);
+
+		tree.load(2, [
+			{
+				id: 4,
+				name: 'Alexandra'
+			},
+			{
+				id: 5,
+				name: 'Alena'
+			},
+			{
+				id: 6,
+				name: 'Marya'
+			}
+		]);
+
+		tree.load(4, [
+			{
+				id: 7,
+				name: 'Semen'
+			},
+			{
+				id: 8,
+				name: 'Danya'
+			}
+		]);
+
+		console.log('Finish');
+	}
+</script>
+</body>
+</html>

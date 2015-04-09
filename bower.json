@@ -1,0 +1,29 @@
+{
+  "name": "is-Tree",
+  "version": "0.1",
+  "description": "Infinity Systems component Tree",
+  "main": "src/WebSocketClient.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "InfinitySystems",
+    "is",
+    "Tree"
+  ],
+  "authors": [
+    "Rendol"
+  ],
+  "license": "MIT",
+  "homepage": "http://infinity-systems.ru/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "InfinitySystems": "*"
+  }
+}
