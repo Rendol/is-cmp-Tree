@@ -14,6 +14,8 @@
 	<script type="application/javascript" src="../src/Element.js"></script>
 	<script type="application/javascript" src="../src/List.js"></script>
 	<script type="application/javascript" src="../src/Widget.js"></script>
+
+	<script type="application/javascript" src="../src/mixins/Element/Keyboard.js"></script>
 </head>
 <body onload="run()">
 
@@ -35,7 +37,8 @@
 
 <script type="text/html" id="widget-tree-element">
 	<li class="js-list">
-		<span class="js-name">Anonymous</span>
+		<!--<span class="js-name">Anonymous</span>-->
+		<input class="js-name"/>
 		<ol class="js-list">
 			<!--
 			Loading...
@@ -51,48 +54,61 @@
 		var tree = IS.crt('widget.Tree', {
 			target: '#my-tree',
 			list: {
-				itemRenderer: '#widget-tree-element'
+				itemRenderer: '#widget-tree-element',
+				Model: IS.cls('widget.Tree.Element', {
+					mixins: {
+						Keyboard: IS.get('widget.Tree.mixins.Element.Keyboard')
+					}
+				})
 			}
 		});
 
 		tree.load(0, [
 			{
 				id: 1,
-				name: 'John'
+				name: 'John',
+				pos: 0
 			},
 			{
 				id: 2,
-				name: 'Artur'
+				name: 'Artur',
+				pos: 1
 			},
 			{
 				id: 3,
-				name: 'Fedor'
+				name: 'Fedor',
+				pos: 2
 			}
 		]);
 
 		tree.load(2, [
 			{
 				id: 4,
-				name: 'Alexandra'
+				name: 'Alexandra',
+				pos: 0
 			},
 			{
 				id: 5,
-				name: 'Alena'
+				name: 'Alena',
+				pos: 1
 			},
 			{
 				id: 6,
-				name: 'Marya'
+				name: 'Marya',
+				pos: 2
 			}
 		]);
 
 		tree.load(4, [
 			{
 				id: 7,
-				name: 'Semen'
+				name: 'Semen',
+				pos: 0
 			},
 			{
 				id: 8,
-				name: 'Danya'
+				name: 'Danya',
+				pos: 1
 			}
 		]);
 
