@@ -193,7 +193,7 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 					name: 'New',
 					pos: index + 1
 				};
-			params[this.widget.parentKey] = list.parent[this.widget.primaryKey];
+			params[this.widget.parentKey] = !list.parent ? 0 : list.parent[this.widget.primaryKey];
 			return new list.Model(params);
 		}
 	});

@@ -33,7 +33,8 @@ IS.reg('widget.Tree', function () {
 				widget: me,
 				target: me.bound('list')
 			});
-			me.collection[0] = me.list;
+			me.list[me.primaryKey] = 0;
+			me.collection[me.list[me.primaryKey]] = me.list;
 
 			__ext__.init.apply(me);
 		},

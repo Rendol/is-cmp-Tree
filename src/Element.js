@@ -17,7 +17,7 @@ IS.reg('widget.Tree.Element', function () {
 
 			if (!id) {
 				id = '-new-' + MK.randomString();
-				me.set(me.widget.primaryKey, id);
+				me[me.widget.primaryKey] = id;
 			}
 
 			me.widget.collection[id] = new me.parent.widget.clsList({
