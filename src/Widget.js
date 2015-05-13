@@ -49,7 +49,7 @@ IS.reg('widget.Tree', function () {
 			'element-create': function (me) {
 				me.on('element-create', function (rec) {
 					me.create(rec);
-					rec.$bound('name').focus();
+					$(rec.$nodes.name).focus();
 				})
 			}
 		}),
