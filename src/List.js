@@ -13,7 +13,7 @@ IS.reg('widget.Tree.List', function () {
 
 		_bindings: MK.extend(__ext__._bindings, {
 			container: function (me) {
-				if (MK.$(':sandbox .js-container').length) {
+				if (me.$(':sandbox .js-container').length) {
 					me.bindNode('container', ':sandbox .js-container');
 				}
 			}

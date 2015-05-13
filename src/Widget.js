@@ -31,7 +31,7 @@ IS.reg('widget.Tree', function () {
 			);
 			me.list = new me.clsList({
 				widget: me,
-				target: me.bound('list')
+					target: me.bound('list')
 			});
 			me.list[me.primaryKey] = 0;
 			me.collection[me.list[me.primaryKey]] = me.list;

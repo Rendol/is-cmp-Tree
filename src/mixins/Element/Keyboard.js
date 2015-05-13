@@ -82,7 +82,7 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 
 					// focus
 					if (item) {
-						item.$bound('name').focus();
+						$(item.$nodes.name).focus();
 					}
 
 					if ([KEY_TAB, KEY_ENTER, KEY_UP, KEY_DOWN].indexOf(e.keyCode) != -1) {
