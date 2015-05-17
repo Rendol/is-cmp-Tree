@@ -14,24 +14,45 @@ IS.reg('widget.Tree', function () {
 		primaryKey: 'id',
 		parentKey: 'parent_id',
 
-		list: {},
+		list: null,
 		collection: {},
+		parentIdCollections: {},
 
 		init: function () {
 			var me = this;
+			me.collection = {};
 
 			me.clsList = IS.cls(
 				me.clsListBlock,
-				MK.extend(
+				$.extend(
+					true,
 					{
-						Model: IS.cls(me.clsElement)
+						Model: IS.cls(me.clsElement),
+						_events: MK.extend(IS.get(me.clsListBlock)._events, {
+							'modify': function (list) {
+								list.on('modify', function (evt) {
+									if ('added' in evt && evt.added.length) {
+										MK.each(evt.added, function (item) {
+											item[me.parentKey] = item.parent.parent ?
+												item.parent.parent[me.primaryKey] : 0;
+											me.parentIdCollections[item[me.primaryKey]] = item[me.parentKey];
+										});
+									}
+									if ('removed' in evt && evt.removed.length) {
+										MK.each(evt.removed, function (item) {
+											delete me.parentIdCollections[item[me.primaryKey]];
+										});
+									}
+								})
+							}
+						})
 					},
 					me.list
 				)
 			);
 			me.list = new me.clsList({
 				widget: me,
-					target: me.bound('list')
+				target: me.bound('list')
 			});
 			me.list[me.primaryKey] = 0;
 			me.collection[me.list[me.primaryKey]] = me.list;

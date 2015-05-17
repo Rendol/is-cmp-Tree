@@ -23,10 +23,10 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 			Keyboard: function (me) {
 				var self = me.mixins.Keyboard;
 				me.on('keydown::name', function (evt) {
-					var e = evt.domEvent, item;
+					var e = evt.domEvent, item, changed;
 
 					if (e.keyCode == KEY_ENTER) {
-						me.widget.trigger('element-create', self.goNew.call(me, me));
+						me.widget.trigger('element-create', self.goNew.call(me, me), me, evt);
 
 						if (e.preventDefault) {
 							e.preventDefault();
@@ -39,6 +39,7 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 						if (e.shiftKey) {
 							item = self.goLeft.call(me, me);
 						}
+
 						// right
 						else {
 							item = self.goRight.call(me, me);
@@ -47,18 +48,33 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 						if (e.preventDefault) {
 							e.preventDefault();
 						}
+
+						//item[me.widget.parentKey] = item.parent.parent ?
+						//	item.parent.parent[me.widget.primaryKey] : 0;
+						console.log('item[me.widget.parentKey]', item[me.widget.parentKey]);
+						me.widget.trigger('element-change-parent', item, me, evt);
 					}
 
 					if ([KEY_UP, KEY_DOWN, KEY_DELETE].indexOf(e.keyCode) !== -1) {
 						if (e.ctrlKey) {
-							// up
-							if (e.keyCode == KEY_UP) {
-								item = self.goPrev.call(me, me);
+
+							if ([KEY_UP, KEY_DOWN].indexOf(e.keyCode) !== -1) {
+
+								// up
+								if (e.keyCode == KEY_UP) {
+									changed = self.getPrev.call(me, me, true);
+									item = self.goPrev.call(me, me);
+								}
+
+								// down
+								if (e.keyCode == KEY_DOWN) {
+									changed = self.getNext.call(me, me, true);
+									item = self.goNext.call(me, me);
+								}
+
+								me.widget.trigger('element-change-position', item, changed, e.keyCode == KEY_UP ? -1 : +1);
 							}
-							// down
-							if (e.keyCode == KEY_DOWN) {
-								item = self.goNext.call(me, me);
-							}
+
 							// delete
 							if (e.keyCode == KEY_DELETE) {
 								item = self.getNext.call(me, me, true);
@@ -66,30 +82,29 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 									item = self.getPrev.call(me, me);
 								}
 								me.parent.del(me);
+
+								me.widget.trigger('element-delete', item);
 							}
 						}
 						else {
+
 							// up
 							if (e.keyCode == KEY_UP) {
 								item = self.getPrev.call(me, me);
 							}
+
 							// down
 							if (e.keyCode == KEY_DOWN) {
 								item = self.getNext.call(me, me);
 							}
+
+							me.widget.trigger('element-change', me);
 						}
 					}
 
 					// focus
 					if (item) {
 						$(item.$nodes.name).focus();
-					}
-
-					if ([KEY_TAB, KEY_ENTER, KEY_UP, KEY_DOWN].indexOf(e.keyCode) != -1) {
-						if (item) {
-							item.pos = me.parent.index(item);
-							me.widget.trigger('element-change', item);
-						}
 					}
 				});
 			}
@@ -190,7 +205,6 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 			var list = item.parent,
 				index = list.index(item),
 				params = {
-					name: 'New',
 					pos: index + 1
 				};
 			params[this.widget.parentKey] = !list.parent ? 0 : list.parent[this.widget.primaryKey];
