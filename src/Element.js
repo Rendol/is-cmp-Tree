@@ -33,6 +33,48 @@ IS.reg('widget.Tree.Element', function () {
 
 		_bindings: MK.extend(__ext__._bindings,
 			{
+				parent: function (me) {
+					me.bindNode(me.widget.parentKey, ':sandbox', {
+						setValue: function (val, evt) {
+							var widget = evt.self.widget;
+							if (me.old[widget.parentKey] != val) {
+								if (me[widget.primaryKey] in widget.parentIdCollections) {
+									var oldParentList = widget.collection[
+										widget.parentIdCollections[
+											me[widget.primaryKey]
+											]
+										];
+
+									var exists = oldParentList.filter(
+										function (item) {
+											return item[widget.primaryKey] == me[widget.primaryKey];
+										}
+									);
+
+									if (exists.length) {
+										var removed = oldParentList.delWithDom(exists[0])[0];
+										widget.collection[val].push_(removed, {moveSandbox: true});
+									}
+								}
+							}
+							widget.parentIdCollections[me[widget.primaryKey]] = me[widget.parentKey];
+						}
+					})
+				},
+				index: function (me) {
+					me.bindNode(me.widget.indexKey, ':sandbox', {
+						setValue: function (val, evt) {
+							var widget = evt.self.widget;
+							if (me.old[widget.parentKey] == me[widget.parentKey]) {
+								if (me.old[widget.indexKey] != val) {
+									var list = me.parent,
+										removed = list.delWithDom(me)[0];
+									list.splice_(me[widget.indexKey], 0, removed, {moveSandbox: true});
+								}
+							}
+						}
+					})
+				},
 				children: function (me) {
 					me.bindNode('childList', ':sandbox .js-list')
 				},

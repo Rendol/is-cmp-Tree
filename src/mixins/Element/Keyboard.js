@@ -49,9 +49,7 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 							e.preventDefault();
 						}
 
-						//item[me.widget.parentKey] = item.parent.parent ?
-						//	item.parent.parent[me.widget.primaryKey] : 0;
-						console.log('item[me.widget.parentKey]', item[me.widget.parentKey]);
+						item[me.widget.indexKey] = item.parent.index(item);
 						me.widget.trigger('element-change-parent', item, me, evt);
 					}
 
@@ -72,6 +70,8 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 									item = self.goNext.call(me, me);
 								}
 
+								item[me.widget.indexKey] = item.parent.index(item);
+								changed[me.widget.indexKey] = changed.parent.index(changed);
 								me.widget.trigger('element-change-position', item, changed, e.keyCode == KEY_UP ? -1 : +1);
 							}
 

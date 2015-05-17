@@ -13,6 +13,7 @@ IS.reg('widget.Tree', function () {
 
 		primaryKey: 'id',
 		parentKey: 'parent_id',
+		indexKey: 'pos',
 
 		list: null,
 		collection: null,
@@ -28,25 +29,7 @@ IS.reg('widget.Tree', function () {
 				$.extend(
 					true,
 					{
-						Model: IS.cls(me.clsElement),
-						_events: MK.extend(IS.get(me.clsListBlock)._events, {
-							'modify': function (list) {
-								list.on('modify', function (evt) {
-									if ('added' in evt && evt.added.length) {
-										MK.each(evt.added, function (item) {
-											item[me.parentKey] = item.parent.parent ?
-												item.parent.parent[me.primaryKey] : 0;
-											item.parent.widget.parentIdCollections[item[me.primaryKey]] = item[me.parentKey];
-										});
-									}
-									if ('removed' in evt && evt.removed.length) {
-										MK.each(evt.removed, function (item) {
-											delete item.parent.widget.parentIdCollections[item[me.primaryKey]];
-										});
-									}
-								})
-							}
-						})
+						Model: IS.cls(me.clsElement)
 					},
 					me.list
 				)
@@ -112,15 +95,11 @@ IS.reg('widget.Tree', function () {
 									return item[me.primaryKey] == dataItem[me.primaryKey];
 								}
 							);
-							if (exists.length) {
-								var removed = oldParentList.delWithDom(exists[0])[0];
-								list.push_(removed, {moveSandbox: true});
-							}
 						}
 					}
 
 					if (exists.length) {
-						exists[0].set(dataItem);
+						exists[0].iSet(dataItem);
 					}
 					else {
 						var method = 'push';
@@ -140,5 +119,4 @@ IS.reg('widget.Tree', function () {
 		}
 
 	});
-})
-;
+});
