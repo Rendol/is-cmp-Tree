@@ -15,12 +15,13 @@ IS.reg('widget.Tree', function () {
 		parentKey: 'parent_id',
 
 		list: null,
-		collection: {},
-		parentIdCollections: {},
+		collection: null,
+		parentIdCollections: null,
 
 		init: function () {
 			var me = this;
 			me.collection = {};
+			me.parentIdCollections = {};
 
 			me.clsList = IS.cls(
 				me.clsListBlock,
@@ -35,12 +36,12 @@ IS.reg('widget.Tree', function () {
 										MK.each(evt.added, function (item) {
 											item[me.parentKey] = item.parent.parent ?
 												item.parent.parent[me.primaryKey] : 0;
-											me.parentIdCollections[item[me.primaryKey]] = item[me.parentKey];
+											item.parent.widget.parentIdCollections[item[me.primaryKey]] = item[me.parentKey];
 										});
 									}
 									if ('removed' in evt && evt.removed.length) {
 										MK.each(evt.removed, function (item) {
-											delete me.parentIdCollections[item[me.primaryKey]];
+											delete item.parent.widget.parentIdCollections[item[me.primaryKey]];
 										});
 									}
 								})
@@ -95,8 +96,29 @@ IS.reg('widget.Tree', function () {
 				var list = me.collection[dataItem[me.parentKey]];
 				if (list) {
 					var exists = list.filter(function (item) {
-						return item.id == dataItem.id;
+						return item[me.primaryKey] == dataItem[me.primaryKey];
 					});
+
+					if (!exists.length) {
+						// change parent
+						if (dataItem[me.primaryKey] in me.parentIdCollections) {
+							var oldParentList = me.collection[
+								me.parentIdCollections[
+									dataItem[me.primaryKey]
+									]
+								];
+							exists = oldParentList.filter(
+								function (item) {
+									return item[me.primaryKey] == dataItem[me.primaryKey];
+								}
+							);
+							if (exists.length) {
+								var removed = oldParentList.delWithDom(exists[0])[0];
+								list.push_(removed, {moveSandbox: true});
+							}
+						}
+					}
+
 					if (exists.length) {
 						exists[0].set(dataItem);
 					}
