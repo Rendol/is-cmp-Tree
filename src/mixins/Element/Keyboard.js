@@ -24,7 +24,6 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 				var self = me.mixins.Keyboard;
 				me.on('keydown::name', function (evt) {
 					var e = evt.domEvent, item, changed;
-
 					if (e.keyCode == KEY_ENTER) {
 						me.widget.trigger('element-create', self.goNew.call(me, me), me, evt);
 
@@ -49,42 +48,31 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 							e.preventDefault();
 						}
 
-						item[me.widget.indexKey] = item.parent.index(item);
+						if (item) {
+							item[me.widget.indexKey] = item.parent.index(item);
+						}
 						me.widget.trigger('element-change-parent', item, me, evt);
 					}
 
-					if ([KEY_UP, KEY_DOWN, KEY_DELETE].indexOf(e.keyCode) !== -1) {
+					if ([KEY_UP, KEY_DOWN].indexOf(e.keyCode) !== -1) {
 						if (e.ctrlKey) {
 
-							if ([KEY_UP, KEY_DOWN].indexOf(e.keyCode) !== -1) {
-
-								// up
-								if (e.keyCode == KEY_UP) {
-									changed = self.getPrev.call(me, me, true);
-									item = self.goPrev.call(me, me);
-								}
-
-								// down
-								if (e.keyCode == KEY_DOWN) {
-									changed = self.getNext.call(me, me, true);
-									item = self.goNext.call(me, me);
-								}
-
-								item[me.widget.indexKey] = item.parent.index(item);
-								changed[me.widget.indexKey] = changed.parent.index(changed);
-								me.widget.trigger('element-change-position', item, changed, e.keyCode == KEY_UP ? -1 : +1);
+							// up
+							if (e.keyCode == KEY_UP) {
+								changed = self.getPrev.call(me, me, true);
+								item = self.goPrev.call(me, me);
 							}
 
-							// delete
-							if (e.keyCode == KEY_DELETE) {
-								item = self.getNext.call(me, me, true);
-								if (!item) {
-									item = self.getPrev.call(me, me);
-								}
-								me.parent.del(me);
-
-								me.widget.trigger('element-delete', item);
+							// down
+							if (e.keyCode == KEY_DOWN) {
+								changed = self.getNext.call(me, me, true);
+								item = self.goNext.call(me, me);
 							}
+
+							item[me.widget.indexKey] = item.parent.index(item);
+							changed[me.widget.indexKey] = changed.parent.index(changed);
+							me.widget.trigger('element-change-position', item, changed, e.keyCode == KEY_UP ? -1 : +1);
+
 						}
 						else {
 
@@ -97,8 +85,25 @@ IS.reg('widget.Tree.mixins.Element.Keyboard', function () {
 							if (e.keyCode == KEY_DOWN) {
 								item = self.getNext.call(me, me);
 							}
+						}
+					}
 
-							me.widget.trigger('element-change', me);
+					// focus
+					if (item) {
+						$(item.$nodes.name).focus();
+					}
+				});
+				me.on('keyup::name', function (evt) {
+					var e = evt.domEvent, item, changed;
+
+					if (e.ctrlKey) {
+						if (e.keyCode == KEY_DELETE) {
+							item = self.getNext.call(me, me, true);
+							if (!item) {
+								item = self.getPrev.call(me, me);
+							}
+
+							me.widget.trigger('element-delete', me);
 						}
 					}
 
