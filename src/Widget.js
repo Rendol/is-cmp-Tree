@@ -102,16 +102,13 @@ IS.reg('widget.Tree', function () {
 						exists[0].iSet(dataItem);
 					}
 					else {
-						var method = 'push';
-						if (list.modeReverseLoad && action == 'load') {
-							method = 'unshift';
-						}
 						var record = dataItem;
 						if (!(record instanceof MK.Object)) {
 							record = new list.Model(dataItem);
 						}
 						record.parent = list;
-						list[method](record);
+
+						list.splice(record[me.indexKey], 0, record);
 					}
 				}
 			});

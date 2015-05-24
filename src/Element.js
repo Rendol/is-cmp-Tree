@@ -53,7 +53,8 @@ IS.reg('widget.Tree.Element', function () {
 
 									if (exists.length) {
 										var removed = oldParentList.delWithDom(exists[0])[0];
-										widget.collection[val].push_(removed, {moveSandbox: true});
+										console.log(removed[widget.indexKey]);
+										widget.collection[val].splice_(removed[widget.indexKey], 0, removed, {moveSandbox: true});
 									}
 								}
 							}
@@ -65,12 +66,10 @@ IS.reg('widget.Tree.Element', function () {
 					me.bindNode(me.widget.indexKey, ':sandbox', {
 						setValue: function (val, evt) {
 							var widget = evt.self.widget;
-							if (me.old[widget.parentKey] == me[widget.parentKey]) {
-								if (me.old[widget.indexKey] != val) {
-									var list = me.parent,
-										removed = list.delWithDom(me)[0];
-									list.splice_(me[widget.indexKey], 0, removed, {moveSandbox: true});
-								}
+							if (me.old[widget.indexKey] != val) {
+								var list = me.parent,
+									removed = list.delWithDom(me)[0];
+								list.splice_(me[widget.indexKey], 0, removed, {moveSandbox: true});
 							}
 						}
 					})
